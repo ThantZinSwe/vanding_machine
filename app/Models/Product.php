@@ -19,11 +19,4 @@ class Product extends Model
         'price',
         'quantity_available',
     ];
-
-    public static function updateQuantity(int $productId, int $quantity)
-    {
-        return self::query()->where('id', $productId)->update([
-            'quantity_available' => $quantity,
-        ]);
-    }
 }

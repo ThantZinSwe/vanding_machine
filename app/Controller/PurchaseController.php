@@ -7,16 +7,28 @@ namespace App\Controller;
 use App\Models\Product;
 use App\Models\Transaction;
 use App\Requests\Purchase\PurchaseRequest;
+use App\Services\ProductService;
+use App\Services\TransactionService;
 use Core\Controller;
 use Core\Session;
 
 class PurchaseController extends Controller
 {
+    private ProductService $productService;
+    
+    private TransactionService $transactionService;
+
+    public function __construct(
+        ?ProductService $productService = null,
+        ?TransactionService $transactionService = null
+    ) {
+        $this->productService = $productService ?? new ProductService();
+        $this->transactionService = $transactionService ?? new TransactionService();
+    }
+
     public function index(string $productId)
     {
-        $product = Product::query()
-            ->where('id', $productId)
-            ->first();
+        $product = $this->productService->findById($productId);
 
         if (!$product) {
             abort(404, "Product not found");
@@ -30,9 +42,7 @@ class PurchaseController extends Controller
     public function store(string $productId)
     {
         /** @var Product $product */
-        $product = Product::query()
-            ->where('id', $productId)
-            ->first();
+        $product = $this->productService->findById($productId);
 
         if (!$product) {
             abort(404, "Product not found");
@@ -42,7 +52,7 @@ class PurchaseController extends Controller
             'quantity_available' => $product->quantity_available,
         ]);
 
-        $transaction = Transaction::query()->create([
+        $transaction = $this->transactionService->create([
             'user_id' => auth()->id,
             'product_id' => $productId,
             'quantity' => $validatedData['quantity'],
@@ -53,7 +63,7 @@ class PurchaseController extends Controller
             abort(500, "Failed to create transaction");
         }
 
-        $product = Product::updateQuantity((int) $productId, $product->quantity_available - $validatedData['quantity']);
+        $product = $this->productService->updateQuantity($productId, $product->quantity_available - $validatedData['quantity']);
 
         if (!$product) {
             abort(500, "Failed to update product quantity");

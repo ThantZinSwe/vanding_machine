@@ -38,4 +38,11 @@ class ProductService
     {
         return Product::query()->where('id', $id)->delete();
     }
+
+    public function updateQuantity(string $productId, int $quantity)
+    {
+        return Product::query()->where('id', $productId)->update([
+            'quantity_available' => $quantity,
+        ]);
+    }
 }
