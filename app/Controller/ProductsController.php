@@ -9,9 +9,17 @@ use App\Requests\Products\CreateProductRequest;
 use App\Requests\Products\UpdateProductRequest;
 use Core\Controller;
 use Core\Session;
+use App\Services\ProductService;
 
 class ProductsController extends Controller
 {
+    private ProductService $productService;
+
+    public function __construct(?ProductService $productService = null)
+    {
+        $this->productService = $productService ?? new ProductService();
+    }
+
     public function index()
     {
         $search = $_GET['q'] ?? '';
@@ -19,13 +27,7 @@ class ProductsController extends Controller
         $order  = strtolower($_GET['order'] ?? 'asc') === 'desc' ? 'DESC' : 'ASC';
         $page   = (int) $_GET['page'] ?? 1;
 
-        $query = Product::query();
-
-        if (!empty($search)) {
-            $query->where('name', 'LIKE', "%{$search}%");
-        }
-
-        $paginator = $query->orderBy($sort, $order)->paginate($page);
+        $paginator = $this->productService->getWithPagination($search, $sort, $order, $page);
 
         $this->view('products/index', [
             'paginator' => $paginator,
@@ -41,16 +43,14 @@ class ProductsController extends Controller
             abort(403, "You are not allowed to access this page");
         }
 
-        $this->view('products/create', [
-            'title' => 'Create Product',
-        ]);
+        $this->view('products/create');
     }
 
     public function store()
     {
         $validatedData = CreateProductRequest::check($_POST);
 
-        $product = Product::create($validatedData);
+        $product = $this->productService->create($validatedData);
 
         if (!$product) {
             abort(500, "Failed to create product");
@@ -58,7 +58,7 @@ class ProductsController extends Controller
 
         Session::flash('success', 'Product created successfully');
 
-        back();
+        $this->back();
     }
 
     public function edit(string $id)
@@ -67,7 +67,7 @@ class ProductsController extends Controller
             abort(403, "You are not allowed to access this page");
         }
 
-        $product = Product::query()->where('id', $id)->first();
+        $product = $this->productService->findById($id);
 
         if (!$product) {
             abort(404, "Product not found");
@@ -82,7 +82,7 @@ class ProductsController extends Controller
     {
         $validatedData = UpdateProductRequest::check($_POST);
 
-        $product = Product::query()->where('id', $id)->update($validatedData);
+        $product = $this->productService->update($id, $validatedData);
 
         if (!$product) {
             abort(500, "Failed to update product");
@@ -90,13 +90,13 @@ class ProductsController extends Controller
 
         Session::flash('success', 'Product updated successfully');
 
-        back();
+        $this->back();
     }
 
     public function destroy(string $id)
     {
-        Product::query()->where('id', $id)->delete();
+        $this->productService->delete($id);
 
-        redirect('/products');
+        $this->redirect('/products');
     }
 }

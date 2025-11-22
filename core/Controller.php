@@ -17,4 +17,19 @@ abstract class Controller
 
         require base_path("resources/views/{$view}.php");
     }
+
+    protected function redirect(string $path): void
+    {
+        redirect($path);
+    }
+
+    protected function back(): void
+    {
+        back();
+    }
+
+    protected function abort(int $code, string $message = ''): void
+    {
+        abort($code, $message);
+    }
 }
