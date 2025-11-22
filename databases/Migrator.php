@@ -55,8 +55,6 @@ class Migrator
             }
         }
 
-        $this->sortFiles($files);
-
         return $files;
     }
 
@@ -84,21 +82,6 @@ class Migrator
         } else {
             throw new \Exception("Could not find migration class in file: " . $path);
         }
-    }
-
-    private function sortFiles($files)
-    {
-        usort($files, function($a, $b) {
-            preg_match('/^\d+/', $a, $aMatches);
-            preg_match('/^\d+/', $b, $bMatches);
-            
-            $aNum = isset($aMatches[1]) ? (int)$aMatches[1] : 0;
-            $bNum = isset($bMatches[1]) ? (int)$bMatches[1] : 0;
-            
-            return $aNum - $bNum;
-        });
-        
-        return $files;
     }
 }
 
