@@ -1,7 +1,7 @@
 <?php $content = ob_get_clean(); ?>
 <?php ob_start(); ?>
 
-<form class="w-full mx-auto space-y-6 bg-white p-6 rounded-xl shadow-md" action="#" method="POST">
+<form class="w-full mx-auto space-y-6 bg-white p-6 rounded-xl shadow-md" action="/login" method="POST">
     <div>
         <label for="email" class="block text-sm font-semibold text-gray-700">Email address</label>
         <div class="mt-2 relative">

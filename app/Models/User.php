@@ -6,6 +6,9 @@ use Core\Model;
 
 /**
  * @property string $role
+ * @property string $password
+ * @property string $name
+ * @property string $email
  */
 class User extends Model
 {

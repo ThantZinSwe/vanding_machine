@@ -157,4 +157,13 @@ abstract class Model
 
         $this->limit = null;
     }
+
+    public function __sleep()
+    {
+        $props = array_keys(get_object_vars($this));
+
+        $propsToRemove = ['db', 'pdo', 'connection'];
+        
+        return array_diff($props, $propsToRemove);
+    }
 }

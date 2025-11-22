@@ -94,6 +94,18 @@ class Router
         return (new $controller)->$method(...$matches);
     }
 
+    public function middleware($class, $action = 'handle')
+    {
+        if ($this->currentRoute) {
+            [$method, $uri] = $this->currentRoute;
+            self::$routes[$method][$uri]['middleware'][] = [
+                'class' => $class,
+                'action' => $action
+            ];
+        }
+        return $this;
+    }
+
     private function handleMiddleware(array $middlewares): bool
     {
         foreach ($middlewares as $middleware) {
