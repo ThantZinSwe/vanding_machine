@@ -8,6 +8,11 @@ use Core\FormRequest;
 
 class RegisterRequest extends FormRequest
 {
+    public function authorize(): bool
+    {
+        return guest();
+    }
+
     public function rules(): array
     {
         return [

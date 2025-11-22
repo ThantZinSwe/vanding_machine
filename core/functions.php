@@ -66,5 +66,15 @@ if (!function_exists('redirect')) {
     function redirect(string $path): void
     {
         header('Location: ' . $path);
+        exit;
+    }
+}
+
+if (!function_exists('abort')) {
+    function abort(int $code, string $message = ''): void
+    {
+        http_response_code($code);
+        echo $message;
+        exit;
     }
 }

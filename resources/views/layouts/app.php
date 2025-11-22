@@ -15,19 +15,19 @@
             <div class="flex justify-between h-16">
                 <!-- Logo -->
                 <div class="flex-shrink-0 flex items-center">
-                    <a href="../products/index.php" class="text-2xl font-bold text-indigo-600 flex items-center gap-2">
+                    <a href="/" class="text-2xl font-bold text-indigo-600 flex items-center gap-2">
                         Vending Machine
                     </a>
                 </div>
 
                 <!-- Desktop Menu -->
                 <div class="hidden sm:flex sm:space-x-8 items-center">
-                    <a href="../products/index.php" class="text-gray-900 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition">
+                    <a href="/products" class="text-gray-900 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition">
                         Products
                     </a>
                     
                     <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-                        <a href="../admin/manage.php" class="text-gray-500 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition">
+                        <a href="/admin/manage.php" class="text-gray-500 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition">
                             Manage Inventory
                         </a>
                     <?php endif; ?>
@@ -35,21 +35,14 @@
 
                 <!-- Auth Buttons -->
                 <div class="hidden sm:flex items-center space-x-4">
-                    <?php if (isset($_SESSION['user_id'])): ?>
-                        <span class="text-sm text-gray-500">
-                            Hello, <span class="font-semibold text-gray-700"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
-                        </span>
-                        <a href="../user/logout.php" class="bg-red-50 text-red-600 hover:bg-red-100 px-4 py-2 rounded-lg text-sm font-medium transition">
+                    <span class="text-sm text-gray-500">
+                        Hello, <span class="font-semibold text-gray-700"><?php echo htmlspecialchars(auth()->name); ?></span>
+                    </span>
+                    <form action="/logout" method="POST">
+                        <button type="submit" class="bg-red-50 text-red-600 hover:bg-red-100 px-4 py-2 rounded-lg text-sm font-medium transition">
                             Logout
-                        </a>
-                    <?php else: ?>
-                        <a href="../user/login.php" class="text-gray-500 hover:text-indigo-600 px-3 py-2 text-sm font-medium transition">
-                            Login
-                        </a>
-                        <a href="../user/register.php" class="bg-indigo-600 text-white hover:bg-indigo-700 px-4 py-2 rounded-lg text-sm font-medium shadow-md transition">
-                            Sign Up
-                        </a>
-                    <?php endif; ?>
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

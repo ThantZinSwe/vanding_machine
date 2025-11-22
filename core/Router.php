@@ -69,6 +69,14 @@ class Router
         $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         $method = $_SERVER['REQUEST_METHOD'];
 
+        if ($method === 'POST' && isset($_POST['_method'])) {
+            $reqMethod = strtoupper($_POST['_method']);
+            
+            if (in_array($reqMethod, ['PUT', 'PATCH', 'DELETE'])) {
+                $method = $reqMethod;
+            }
+        }
+
         foreach (self::$routes[$method] as $routeURI => $route) {
             $pattern = '#^' . preg_replace('/\{([^\}]+)\}/', '([^\/]+)', $routeURI) . '$#';
 
@@ -79,8 +87,7 @@ class Router
             return $this->call($route, $matches);
         }
 
-        http_response_code(404);
-        echo "404 Not Found";
+        abort(404, "Page not found");
 
         return false;
     }

@@ -19,6 +19,7 @@ class Validation
         'email' => 'The :field field must be a valid email address.',
         'min' => 'The :field field must be at least :min characters.',
         'max' => 'The :field field must be at most :max characters.',
+        'positive' => 'The :field field must be a positive number.',
     ];
 
     public function __construct()
@@ -105,6 +106,20 @@ class Validation
     {
         if (strlen($value) > $max) {
             $this->addError($field, 'max', ['max' => $max]);
+        }
+    }
+
+    protected function numeric(string $field, mixed $value): void
+    {
+        if (!is_numeric($value)) {
+            $this->addError($field, 'numeric');
+        }
+    }
+
+    protected function positive(string $field, mixed $value): void
+    {
+        if (!is_numeric($value) || $value <= 0) {
+            $this->addError($field, 'positive');
         }
     }
 

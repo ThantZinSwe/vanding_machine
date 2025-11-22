@@ -45,6 +45,13 @@ class AuthController extends Controller
             redirect('/products');
         }
 
+        Session::flash('invalid', 'Invalid credentials');
+        back();
+    }
+
+    public function logout()
+    {
+        Session::clear('auth');
         redirect('/login');
     }
 }

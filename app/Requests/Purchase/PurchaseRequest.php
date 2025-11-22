@@ -2,22 +2,21 @@
 
 declare(strict_types=1);
 
-namespace App\Requests\Auth;
+namespace App\Requests\Purchase;
 
 use Core\FormRequest;
 
-class LoginRequest extends FormRequest
+class PurchaseRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return guest();
+        return !is_admin();
     }
 
     public function rules(): array
     {
         return [
-            'email' => ['required', 'email'],
-            'password' => ['required', 'min:8'],
+            'quantity' => ['required', 'numeric', 'min:1', 'positive'],
         ];
     }
 }

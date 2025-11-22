@@ -22,6 +22,8 @@ abstract class Model
 
     protected ?int $limit = null;
 
+    protected ?int $offset = null;
+
     protected array $fillable = [];
 
     protected array $attributes = [];
@@ -73,6 +75,21 @@ abstract class Model
         return $this;
     }
 
+    public function count(): int
+    {
+        $sql = "SELECT COUNT(*) as total FROM {$this->table}";
+
+        if (!empty($this->wheres)) {
+            $sql .= " WHERE " . implode(' AND ', $this->wheres);
+        }
+
+        $stmt = $this->runQuery($sql);
+    
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return (int) ($result['total'] ?? 0);
+    }
+
     public function get(): array
     {
         $sql = $this->compileSql();
@@ -80,6 +97,44 @@ abstract class Model
         $stmt = $this->runQuery($sql);
         
         return $stmt->fetchAll(PDO::FETCH_CLASS, static::class);
+    }
+
+    public function skip(int $offset): self
+    {
+        $this->offset = $offset;
+
+        return $this;
+    }
+
+    public function paginate(int $perPage = 15, int $page = 1): array
+    {
+        $page = max(1, $page);
+
+        $countQuery = clone $this;
+        $total = $countQuery->count();
+
+        $lastPage = (int) ceil($total / $perPage);
+        
+        if ($lastPage > 0 && $page > $lastPage) {
+            $page = $lastPage;
+        }
+
+        $offset = ($page - 1) * $perPage;
+
+        $this->take($perPage)->skip($offset);
+        $items = $this->get();
+
+        return [
+            'data' => $items,
+            'total' => $total,
+            'per_page' => $perPage,
+            'current_page' => $page,
+            'last_page' => $lastPage,
+            'from' => $total === 0 ? 0 : $offset + 1,
+            'to' => $total === 0 ? 0 : min($offset + $perPage, $total),
+            'prev_page' => ($page > 1) ? $page - 1 : null,
+            'next_page' => ($page < $lastPage) ? $page + 1 : null,
+        ];
     }
 
     public function first(): static|null
@@ -90,7 +145,9 @@ abstract class Model
 
         $stmt = $this->runQuery($sql);
 
-        return $stmt->fetchObject(static::class);
+        $result = $stmt->fetchObject(static::class);
+
+        return $result ?: null;
     }
 
     public static function create(array $attributes): static|bool
@@ -112,7 +169,53 @@ abstract class Model
             
             return $model->query()->where($model->primaryKey, $id)->first();
         } catch (\PDOException $e) {
-            dd($e->getMessage());
+            error_log($e->getMessage());
+            return false;
+        }
+    }
+
+    public function update(array $attributes): bool
+    {
+        $this->fill($attributes);
+
+        $setClauses = array_map(fn($key) => "{$key} = ?", array_keys($this->attributes));
+
+        $sql = "UPDATE {$this->table} SET " . implode(', ', $setClauses);
+
+        $bindings = array_values($this->attributes);
+
+        if (!empty($this->wheres)) {
+            $sql .= " WHERE " . implode(' AND ', $this->wheres);
+        }
+
+        $this->bindings = array_merge($bindings, $this->bindings);
+
+        try {
+            $this->runQuery($sql);
+            
+            return true;
+        } catch (\PDOException $e) {
+            if (function_exists('dd')) {
+                error_log($e->getMessage());
+            }
+            return false;
+        }
+    }
+
+    public function delete(): bool
+    {
+        $sql = "DELETE FROM {$this->table}";
+
+        if (!empty($this->wheres)) {
+            $sql .= " WHERE " . implode(' AND ', $this->wheres);
+        }
+
+        try {
+            $this->runQuery($sql);
+            
+            return true;
+        } catch (\PDOException $e) {
+            error_log($e->getMessage());
             return false;
         }
     }
@@ -131,6 +234,10 @@ abstract class Model
 
         if (!empty($this->limit)) {
             $sql .= " LIMIT " . $this->limit;
+        }
+
+        if (!empty($this->offset)) {
+            $sql .= " OFFSET " . $this->offset;
         }
 
         return $sql;

@@ -1,12 +1,13 @@
-<?php ob_start(); ?> 
-<form class="w-full mx-auto space-y-6 bg-white p-6 rounded-xl shadow-md" action="/register" method="POST">
+<?php $content = ob_get_clean(); ?>
+<?php ob_start(); ?>
+<form class="max-w-xl mx-auto space-y-6 bg-white p-6 rounded-xl shadow-md" action="/products" method="POST">
     <div>
-        <label for="name" class="block text-sm font-semibold text-gray-700">Username</label>
+        <label for="name" class="block text-sm font-semibold text-gray-700">Product Name</label>
         <div class="mt-2 relative">
             <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-                <i class="fa-solid fa-user"></i>
+                <i class="fa-solid fa-box"></i>
             </span>
-            <input type="text" name="name" id="name" placeholder="johndoe" 
+            <input type="text" name="name" id="name" placeholder="Product Name" 
                 value="<?= $old['name'] ?? '' ?>" 
                 class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
         </div>
@@ -14,42 +15,41 @@
     </div>
 
     <div>
-        <label for="email" class="block text-sm font-semibold text-gray-700">Email address</label>
+        <label for="email" class="block text-sm font-semibold text-gray-700">Price</label>
         <div class="mt-2 relative">
             <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-                <i class="fa-solid fa-envelope"></i>
+                <i class="fa-solid fa-dollar-sign"></i>
             </span>
-            <input type="email" name="email" id="email" placeholder="you@example.com" 
-                value="<?= $old['email'] ?? '' ?>"
+            <input type="text" name="price" id="price" placeholder="0.00" 
+                value="<?= $old['price'] ?? '' ?>"
                 class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
         </div>
-        <p class="mt-1 text-xs text-red-500 font-semibold"><?= $errors['email'] ?? '' ?></p>
+        <p class="mt-1 text-xs text-red-500 font-semibold"><?= $errors['price'] ?? '' ?></p>
     </div>
 
     <div>
-        <label for="password" class="block text-sm font-semibold text-gray-700">Password</label>
+        <label for="quantity_available" class="block text-sm font-semibold text-gray-700">Quantity Available</label>
         <div class="mt-2 relative">
             <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-                <i class="fa-solid fa-lock"></i>
+                <i class="fa-solid fa-coins"></i>
             </span>
-            <input type="password" name="password" id="password" 
+            <input type="number" name="quantity_available" id="quantity_available"  placeholder="0" 
+                value="<?= $old['quantity_available'] ?? '' ?>"
                 class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
         </div>
-        <p class="mt-1 text-xs text-gray-500">Must be at least 8 characters.</p>
-        <p class="mt-1 text-xs text-red-500 font-semibold"><?= $errors['password'] ?? '' ?></p>
+        <p class="mt-1 text-xs text-red-500 font-semibold"><?= $errors['quantity_available'] ?? '' ?></p>
     </div>
 
     <div>
         <button type="submit"
             class="w-full py-3 text-white font-medium bg-indigo-600 rounded-lg shadow hover:bg-indigo-700 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-            Register
+            Save
         </button>
     </div>
 
     <p class="text-center text-sm text-gray-600">
-        Already have an account?
-        <a href="/login" class="font-medium text-indigo-600 hover:text-indigo-500 transition">Sign in</a>
+        <a href="/products" class="font-medium text-indigo-600 hover:text-indigo-500 transition">Back to Products</a>
     </p>
 </form>
 <?php $content = ob_get_clean(); ?>
-<?php include base_path('resources/views/layouts/guest.php'); ?>
+<?php include base_path('resources/views/layouts/app.php'); ?>

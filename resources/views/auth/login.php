@@ -2,7 +2,8 @@
 <?php ob_start(); ?>
 
 <form class="w-full mx-auto space-y-6 bg-white p-6 rounded-xl shadow-md" action="/login" method="POST">
-    <div>
+<p class="text-red-500 font-semibold"><?= $invalid ?? '' ?></p>    
+<div>
         <label for="email" class="block text-sm font-semibold text-gray-700">Email address</label>
         <div class="mt-2 relative">
             <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
@@ -11,6 +12,7 @@
             <input type="email" name="email" id="email" placeholder="you@example.com" required
                 class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
         </div>
+        <p class="mt-1 text-xs text-red-500 font-semibold"><?= $errors['email'] ?? '' ?></p>
     </div>
 
     <div>
@@ -22,6 +24,7 @@
             <input type="password" name="password" id="password" placeholder="••••••••" required
                 class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
         </div>
+        <p class="mt-1 text-xs text-red-500 font-semibold"><?= $errors['password'] ?? '' ?></p>
     </div>
 
     <div>

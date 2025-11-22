@@ -51,6 +51,11 @@ class Session
         $_SESSION = [];
     }
 
+    public static function clear($key)
+    {
+        unset($_SESSION[$key]);
+    }
+
     public static function destroy()
     {
         static::flush();
