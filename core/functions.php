@@ -53,3 +53,19 @@ if (!function_exists('env')) {
         return $env[$key] ?? $default;
     }
 }
+
+if (!function_exists('back')) {
+    function back()
+    {
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit;
+    }
+}
+
+if (!function_exists('redirect')) {
+    function redirect(string $path): void
+    {
+        header('Location: ' . $path);
+        exit;
+    }
+}

@@ -1,16 +1,16 @@
-<?php $content = ob_get_clean(); ?>
-<?php ob_start(); ?>
-
-<form class="w-full mx-auto space-y-6 bg-white p-6 rounded-xl shadow-md" action="#" method="POST">
+<?php ob_start(); ?> 
+<form class="w-full mx-auto space-y-6 bg-white p-6 rounded-xl shadow-md" action="/register" method="POST">
     <div>
-        <label for="username" class="block text-sm font-semibold text-gray-700">Username</label>
+        <label for="name" class="block text-sm font-semibold text-gray-700">Username</label>
         <div class="mt-2 relative">
             <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                 <i class="fa-solid fa-user"></i>
             </span>
-            <input type="text" name="username" id="username" placeholder="johndoe" required
+            <input type="text" name="name" id="name" placeholder="johndoe" 
+                value="<?= $old['name'] ?? '' ?>" 
                 class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
         </div>
+        <p class="mt-1 text-xs text-red-500 font-semibold"><?= $errors['name'] ?? '' ?></p>
     </div>
 
     <div>
@@ -19,9 +19,11 @@
             <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                 <i class="fa-solid fa-envelope"></i>
             </span>
-            <input type="email" name="email" id="email" placeholder="you@example.com" required
+            <input type="email" name="email" id="email" placeholder="you@example.com" 
+                value="<?= $old['email'] ?? '' ?>"
                 class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
         </div>
+        <p class="mt-1 text-xs text-red-500 font-semibold"><?= $errors['email'] ?? '' ?></p>
     </div>
 
     <div>
@@ -30,21 +32,11 @@
             <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                 <i class="fa-solid fa-lock"></i>
             </span>
-            <input type="password" name="password" id="password" required
+            <input type="password" name="password" id="password" 
                 class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
         </div>
         <p class="mt-1 text-xs text-gray-500">Must be at least 8 characters.</p>
-    </div>
-
-    <div>
-        <label for="confirm_password" class="block text-sm font-semibold text-gray-700">Confirm Password</label>
-        <div class="mt-2 relative">
-            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-                <i class="fa-solid fa-check-double"></i>
-            </span>
-            <input type="password" name="confirm_password" id="confirm_password" required
-                class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
-        </div>
+        <p class="mt-1 text-xs text-red-500 font-semibold"><?= $errors['password'] ?? '' ?></p>
     </div>
 
     <div>

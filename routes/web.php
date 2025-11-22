@@ -8,6 +8,7 @@ use Core\Router;
 
 // auth
 Router::get('/register', [AuthController::class, 'register']);
+Router::post('/register', [AuthController::class, 'submitRegister']);
 Router::get('/login', [AuthController::class, 'login']);
 
 // products
