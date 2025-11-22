@@ -1,9 +1,8 @@
 <?php $content = ob_get_clean(); ?>
 <?php ob_start(); ?>
-
 <form class="w-full mx-auto space-y-6 bg-white p-6 rounded-xl shadow-md" action="/login" method="POST">
-<p class="text-red-500 font-semibold"><?= $invalid ?? '' ?></p>    
-<div>
+    <p class="text-red-500 font-semibold"><?= $invalid ?? '' ?></p>    
+    <div>
         <label for="email" class="block text-sm font-semibold text-gray-700">Email address</label>
         <div class="mt-2 relative">
             <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">

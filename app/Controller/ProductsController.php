@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Requests\Products\CreateProductRequest;
 use App\Requests\Products\UpdateProductRequest;
 use Core\Controller;
+use Core\Session;
 
 class ProductsController extends Controller
 {
@@ -24,7 +25,7 @@ class ProductsController extends Controller
             $query->where('name', 'LIKE', "%{$search}%");
         }
 
-        $paginator = $query->orderBy($sort, $order)->paginate(15, $page);
+        $paginator = $query->orderBy($sort, $order)->paginate($page);
 
         $this->view('products/index', [
             'paginator' => $paginator,
@@ -36,6 +37,10 @@ class ProductsController extends Controller
 
     public function create()
     {
+        if (!is_admin()) {
+            abort(403, "You are not allowed to access this page");
+        }
+
         $this->view('products/create', [
             'title' => 'Create Product',
         ]);
@@ -45,13 +50,23 @@ class ProductsController extends Controller
     {
         $validatedData = CreateProductRequest::check($_POST);
 
-        Product::create($validatedData);
+        $product = Product::create($validatedData);
 
-        redirect('/products');
+        if (!$product) {
+            abort(500, "Failed to create product");
+        }
+
+        Session::flash('success', 'Product created successfully');
+
+        back();
     }
 
     public function edit(string $id)
     {
+        if (!is_admin()) {
+            abort(403, "You are not allowed to access this page");
+        }
+
         $product = Product::query()->where('id', $id)->first();
 
         if (!$product) {
@@ -67,9 +82,15 @@ class ProductsController extends Controller
     {
         $validatedData = UpdateProductRequest::check($_POST);
 
-        Product::query()->where('id', $id)->update($validatedData);
+        $product = Product::query()->where('id', $id)->update($validatedData);
 
-        redirect('/products');
+        if (!$product) {
+            abort(500, "Failed to update product");
+        }
+
+        Session::flash('success', 'Product updated successfully');
+
+        back();
     }
 
     public function destroy(string $id)

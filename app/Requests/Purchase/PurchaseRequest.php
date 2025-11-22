@@ -16,7 +16,13 @@ class PurchaseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'quantity' => ['required', 'numeric', 'min:1', 'positive'],
+            'quantity' => [
+                'required',
+                'numeric',
+                'min:1',
+                'positive',
+                'max:' . $this->params['quantity_available'],
+            ],
         ];
     }
 }

@@ -10,7 +10,7 @@ class RegisterRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return guest();
+        return is_guest();
     }
 
     public function rules(): array

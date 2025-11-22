@@ -35,21 +35,29 @@ class PurchaseController extends Controller
             ->first();
 
         if (!$product) {
-            throw new \Exception('Product not found');
+            abort(404, "Product not found");
         }
 
-        $validatedData = PurchaseRequest::check($_POST);
+        $validatedData = PurchaseRequest::check($_POST, [
+            'quantity_available' => $product->quantity_available,
+        ]);
 
-        Transaction::query()->create([
+        $transaction = Transaction::query()->create([
             'user_id' => auth()->id,
             'product_id' => $productId,
             'quantity' => $validatedData['quantity'],
             'total_price' => $validatedData['quantity'] * $product->price,
         ]);
 
-        Product::query()->where('id', $productId)->update([
-            'quantity_available' => $product->quantity_available - $validatedData['quantity'],
-        ]);
+        if (!$transaction) {
+            abort(500, "Failed to create transaction");
+        }
+
+        $product = Product::updateQuantity((int) $productId, $product->quantity_available - $validatedData['quantity']);
+
+        if (!$product) {
+            abort(500, "Failed to update product quantity");
+        }
 
         Session::flash('success', 'Product purchased successfully');
         

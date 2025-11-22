@@ -8,14 +8,18 @@ use Core\Validation;
 
 abstract class FormRequest
 {
+    protected array $params = [];
+
     public function authorize(): bool
     {
         return true;
     }
 
-    public static function check(array $data): array
+    public static function check(array $data, array $params = []): array
     {
-        $instance = new static($data);
+        $instance = new static();
+
+        $instance->params = $params;
 
         if (!$instance->authorize()) {
             abort(403, "Unauthorized");

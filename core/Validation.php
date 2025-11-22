@@ -17,8 +17,11 @@ class Validation
     protected array $messages = [
         'required' => 'The :field field is required.',
         'email' => 'The :field field must be a valid email address.',
-        'min' => 'The :field field must be at least :min characters.',
-        'max' => 'The :field field must be at most :max characters.',
+        'min_numeric' => 'The :field must be at least :min.',
+        'max_numeric' => 'The :field must not be greater than :max.',
+        'min_string'  => 'The :field must be at least :min characters.',
+        'max_string'  => 'The :field must not be greater than :max characters.',
+        'numeric' => 'The :field must be a number.',
         'positive' => 'The :field field must be a positive number.',
     ];
 
@@ -97,15 +100,27 @@ class Validation
 
     protected function min(string $field, mixed $value, string|int $min): void
     {
-        if (strlen($value) < $min) {
-            $this->addError($field, 'min', ['min' => $min]);
+        if (is_numeric($value)) {
+            if ($value < $min) {
+                $this->addError($field, 'min_numeric', ['min' => $min]);
+            }
+        } else {
+            if (strlen($value) < $min) {
+                $this->addError($field, 'min_string', ['min' => $min]);
+            }
         }
     }
 
     protected function max(string $field, mixed $value, string|int $max): void
     {
-        if (strlen($value) > $max) {
-            $this->addError($field, 'max', ['max' => $max]);
+        if (is_numeric($value)) {
+            if ($value > $max) {
+                $this->addError($field, 'max_numeric', ['max' => $max]);
+            }
+        } else {
+            if (strlen($value) > $max) {
+                $this->addError($field, 'max_string', ['max' => $max]);
+            }
         }
     }
 

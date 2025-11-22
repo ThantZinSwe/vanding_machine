@@ -9,8 +9,8 @@ if (!function_exists('auth')) {
     }
 }
 
-if (!function_exists('guest')) {
-    function guest()
+if (!function_exists('is_guest')) {
+    function is_guest()
     {
         return !Session::has('auth');
     }

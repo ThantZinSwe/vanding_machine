@@ -19,6 +19,14 @@ class AuthController extends Controller
 
     public function submitRegister()
     {
+        /** @var User $user */
+        $user = User::query()->where('email', $_POST['email'])->first();
+
+        if ($user) {
+            Session::flash('invalid', 'Email already exists');
+            back();
+        }
+
         $validatedData = RegisterRequest::check($_POST);
 
         $validatedData['password'] = password_hash($validatedData['password'], PASSWORD_DEFAULT);
@@ -51,7 +59,7 @@ class AuthController extends Controller
 
     public function logout()
     {
-        Session::clear('auth');
+        Session::destroy();
         redirect('/login');
     }
 }

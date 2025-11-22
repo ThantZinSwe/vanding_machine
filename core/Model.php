@@ -106,9 +106,10 @@ abstract class Model
         return $this;
     }
 
-    public function paginate(int $perPage = 15, int $page = 1): array
+    public function paginate(int $page = 1, ?int $perPage = null): array
     {
         $page = max(1, $page);
+        $perPage = $perPage ?? env('PAGINATION_PER_PAGE', 10);
 
         $countQuery = clone $this;
         $total = $countQuery->count();

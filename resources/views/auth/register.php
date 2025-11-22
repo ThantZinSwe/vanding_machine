@@ -1,5 +1,6 @@
 <?php ob_start(); ?> 
 <form class="w-full mx-auto space-y-6 bg-white p-6 rounded-xl shadow-md" action="/register" method="POST">
+    <p class="text-red-500 font-semibold"><?= $invalid ?? '' ?></p>       
     <div>
         <label for="name" class="block text-sm font-semibold text-gray-700">Username</label>
         <div class="mt-2 relative">

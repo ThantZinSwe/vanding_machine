@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Controller\AuthController;
+use App\Controller\HomeController;
 use App\Controller\ProductsController;
 use App\Controller\PurchaseController;
 use App\Middleware\AuthMiddleware;
@@ -15,6 +16,9 @@ Router::post('/register', [AuthController::class, 'submitRegister']);
 Router::get('/login', [AuthController::class, 'login'])->middleware(GuestMiddleware::class);
 Router::post('/login', [AuthController::class, 'submitLogin']);
 Router::post('/logout', [AuthController::class, 'logout'])->middleware(AuthMiddleware::class);
+
+// home
+Router::get('/', [HomeController::class, 'index']);
 
 // products
 Router::get('/products', [ProductsController::class, 'index'])->middleware(AuthMiddleware::class);
