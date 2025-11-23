@@ -48,7 +48,7 @@ abstract class Model
         return new static();
     }
 
-    public function where(string $column, string $operator, mixed $value = null): self
+    public function where(string $column, string $operator = '=', mixed $value = null): self
     {
         if (func_num_args() === 2) {
             $value = $operator;

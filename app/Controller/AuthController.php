@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use Core\Controller;
+use Core\Controller\Controller;
 use Core\Session;
 use App\Models\User;
 use App\Requests\Auth\LoginRequest;

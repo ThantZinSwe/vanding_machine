@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use Core\Controller;
+use Core\Controller\Controller;
 
 class HomeController extends Controller
 {

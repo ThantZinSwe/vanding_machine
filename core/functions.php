@@ -78,3 +78,25 @@ if (!function_exists('abort')) {
         exit;
     }
 }
+
+if (!function_exists('wants_json')) {
+    function wants_json(): bool
+    {
+        $uri = $_SERVER['REQUEST_URI'] ?? '/';
+    
+        return str_starts_with($uri, '/api') || (isset($_SERVER['HTTP_ACCEPT']) && str_contains($_SERVER['HTTP_ACCEPT'], 'json'));
+    }
+}
+
+if (!function_exists('json_response')) {
+    function json_response(mixed $data, int $status = 200): void
+    {
+        header('Content-Type: application/json');
+
+        http_response_code($status);
+
+        echo json_encode($data);
+        
+        exit;
+    }
+}

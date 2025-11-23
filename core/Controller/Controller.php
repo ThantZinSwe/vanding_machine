@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Core;
+namespace Core\Controller;
+
+use Core\Session;
 
 abstract class Controller
 {

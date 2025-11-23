@@ -98,7 +98,32 @@ class Router
 
         [$controller, $method] = $route['action'];
 
-        return (new $controller)->$method(...$matches);
+        $controllerInstance = $this->resolveClass($controller);
+
+        return $controllerInstance->$method(...$matches);
+    }
+
+    private function resolveClass(string $class)
+    {
+        $reflection = new \ReflectionClass($class);
+
+        $constructor = $reflection->getConstructor();
+
+        if (!$constructor) {
+            return new $class();
+        }
+
+        $dependencies = [];
+
+        foreach ($constructor->getParameters() as $param) {
+            $type = $param->getType();
+
+            if ($type && !$type->isBuiltin()) {
+                $dependencies[] = $this->resolveClass($type->getName());
+            }
+        }
+
+        return $reflection->newInstanceArgs($dependencies);
     }
 
     public function middleware($class, $action = 'handle')

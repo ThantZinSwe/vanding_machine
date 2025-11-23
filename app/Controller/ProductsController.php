@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Models\Product;
 use App\Requests\Products\CreateProductRequest;
 use App\Requests\Products\UpdateProductRequest;
-use Core\Controller;
+use Core\Controller\Controller;
 use Core\Session;
 use App\Services\ProductService;
 
@@ -15,9 +14,9 @@ class ProductsController extends Controller
 {
     private ProductService $productService;
 
-    public function __construct(?ProductService $productService = null)
+    public function __construct(ProductService $productService)
     {
-        $this->productService = $productService ?? new ProductService();
+        $this->productService = $productService;
     }
 
     public function index()

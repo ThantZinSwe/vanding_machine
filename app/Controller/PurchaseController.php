@@ -9,7 +9,7 @@ use App\Models\Transaction;
 use App\Requests\Purchase\PurchaseRequest;
 use App\Services\ProductService;
 use App\Services\TransactionService;
-use Core\Controller;
+use Core\Controller\Controller;
 use Core\Session;
 
 class PurchaseController extends Controller
@@ -19,11 +19,11 @@ class PurchaseController extends Controller
     private TransactionService $transactionService;
 
     public function __construct(
-        ?ProductService $productService = null,
-        ?TransactionService $transactionService = null
+        ProductService $productService,
+        TransactionService $transactionService
     ) {
-        $this->productService = $productService ?? new ProductService();
-        $this->transactionService = $transactionService ?? new TransactionService();
+        $this->productService = $productService;
+        $this->transactionService = $transactionService;
     }
 
     public function index(string $productId)
