@@ -55,6 +55,8 @@ class Migrator
             }
         }
 
+        sort($files);
+        
         return $files;
     }
 
