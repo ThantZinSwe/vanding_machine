@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Core\Databases\Database;
 
-// Adjust path to autoload based on file location (databases/Seed.php)
 require_once __DIR__ . '/../vendor/autoload.php';
 
 class Seed
